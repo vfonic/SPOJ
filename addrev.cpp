@@ -1,11 +1,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <stdexcept>
 
 using namespace std;
 
-int main(int argc, char const *argv[])
+int main()
 {
     int N;
     

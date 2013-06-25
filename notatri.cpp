@@ -33,21 +33,16 @@ int main()
         sort(a, a + n);
         
         int sol = 0;
-        for (int i = 0; i < n-2; ++i) {
-            for (int j = i+1; j < n-1; ++j) {
-                int lo = j+1, hi = n;
-                int mid = lo + (hi-lo)/2;
-                while (lo < hi) {
-                    if (a[i]+a[j] >= a[mid]) lo = mid+1;
-                    else hi = mid;
-                    mid = lo + (hi-lo)/2;
-                }
-                sol += mid-j-1;
+        for (int i = n-1; i > 1; --i) {
+            int j = 0, k = i-1;
+            while(j<k) {
+                while(j<k && a[j]+a[k] >= a[i]) k--;
+                sol += k-j;
+                ++j;
             }
         }
         
-        long long fac = (long long)n*(n-1)*(n-2)/6;
-        printf("%d\n", (int)fac-sol);
+        printf("%d\n", sol);
         
         scanf("%d", &n);
     }

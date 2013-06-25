@@ -11,6 +11,7 @@
 #include <queue>
 #include <set>
 #include <sstream>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -19,54 +20,49 @@
 
 using namespace std;
 
-struct event {
-    int position;
+struct brick {
+    int index, left;
     long long height;
-    event (int _position, long long _height) { position = _position; height = _height; }
+    brick(int _index, long long _height, int _left) { index = _index; height = _height; left = _left; }
+    brick() {}
 };
-
-bool operator<(event a, event b) {
-    return a.height < b.height;
-}
 
 int main()
 {
+    cin.sync_with_stdio(false);
     int n;
     scanf("%d", &n);
     
-    while(n != 0) {
-        vector<event> events;
+    brick top;
+    do {
+        long long x;
+        long long sol = 0;
+        stack<brick> stog; // index, height, left
+        
         for (int i = 0; i < n; ++i) {
-            int x;
-            scanf("%d", &x);
-            events.push_back(event(i, x));
-        }
-        sort(events.begin(), events.end());
-      
-        set<int> indexes;
-        long long sol = events[0].height * n;
-        indexes.insert(events[0].position);
-      
-        for (vector<event>::iterator it = events.begin()+1; it != events.end(); ++it) {
-            long long tmp_sol;
-            set<int>::iterator sit = indexes.lower_bound(it->position);
-            if (sit == indexes.end()) {
-                --sit;
-                tmp_sol = (n - *sit - 1) * it->height;
-            } else if (sit == indexes.begin()) {
-                tmp_sol = *sit * it->height;
-            } else {
-                set<int>::iterator lower_bound = sit;
-                --lower_bound;
-                tmp_sol = (*sit - *lower_bound - 1) * it->height;
+            scanf("%lld", &x);
+            
+            while (!stog.empty() && (top = stog.top()).height > x) {
+                if (sol < top.height * (i-top.left)) sol = top.height * (i-top.left);
+                stog.pop();
             }
-            if (tmp_sol > sol) sol = tmp_sol;
-            indexes.insert(it->position);
+            if (stog.empty())
+                stog.push(brick(i, x, 0));
+            else stog.push(brick(i, x, top.index+1));
         }
+        
+        brick last_pair;
+        while (!stog.empty()) {
+            last_pair = stog.top();
+            if (sol < last_pair.height * (n-last_pair.left)) sol = last_pair.height * (n-last_pair.left);
+            stog.pop();
+            if (stog.empty() && sol < last_pair.height * n) sol = last_pair.height * n;
+        }
+        
         printf("%lld\n", sol);
         
         scanf("%d", &n);
-    }
+    } while(n);
     
     return 0;
 }

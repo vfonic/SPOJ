@@ -20,42 +20,51 @@
 
 using namespace std;
 
-vector<int> edges[MAXN];
-bool bio[MAXN];
+int union_find[MAXN];
+int size[MAXN];
 
-bool bfs(int from, int index) {
-    if (bio[index]) return false;
-    bio[index] = true;
-    
-    for (int i = 0; i < (int)edges[index].size(); ++i) {
-        if (edges[index][i] != from && !bfs(index, edges[index][i])) return false;
+int root(int index) {
+    int root = index;
+    while (root != union_find[root])
+        root = union_find[root];
+    while (index != root) {
+        int newindex = union_find[index];
+        union_find[index] = root;
+        index = newindex;
     }
+    return root;
+}
+
+bool unite(int from, int to) {
+    int union_find_from = root(from), union_find_to = root(to);
+    if (union_find_from == union_find_to) return false;
+    
+    if (size[union_find_from] < size[union_find_to]) { union_find[union_find_from] = union_find_to; size[union_find_to] += size[union_find_from]; }
+    else { union_find[union_find_to] = union_find_from; size[union_find_from] += size[union_find_to]; }
     return true;
 }
 
 int main()
 {
+    cin.sync_with_stdio(false);
     int n,m;
     scanf("%d%d", &n, &m);
     
     if (n <= m) { printf("NO\n"); return 0; }
     
+    
+    for (int i = 1; i <= n; ++i) {
+        union_find[i] = i;
+        size[i] = 1;
+    }
+    
     int from, to;
     for (int qwertz = 0; qwertz < m; ++qwertz) {
         scanf("%d%d", &from, &to);
         
-        edges[from].push_back(to);
-        edges[to].push_back(from);
+        if (!unite(from, to)) { printf("NO\n"); return 0; }
     }
     
-    for (int i = 1; i <= n; ++i) {
-        if (!bio[i]) {
-            if (!bfs(0, i)) {
-                printf("NO\n");
-                return 0;
-            }
-        }
-    }
     printf("YES\n");
     return 0;
 }

@@ -27,7 +27,6 @@ string s;
 int limit;
 
 int h(int idx, int length) {
-    // printf("  "); // the mysterious line
     return H[idx+length]-H[idx-1]*P[length+1];
 }
 

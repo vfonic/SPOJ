@@ -27,7 +27,7 @@ string s;
 int limit;
 
 int h(int idx, int length) {
-    return H[idx+length]-H[idx-1]*P[length+1];
+    return H[idx+length-1]-H[idx-1]*P[length];
 }
 
 int lcp(int mini, int idx) {
@@ -39,7 +39,7 @@ int lcp(int mini, int idx) {
         if (h(mini, mid) == h(idx, mid)) lo = mid+1;
         else hi = mid;
     }
-    return lo;
+    return lo-1;
 }
 
 int main() {
@@ -47,7 +47,7 @@ int main() {
     cin >> s;
     limit = s.size();
     s += s;
-        
+    
     P[0] = 1;
     H[0] = s[0];
     int i;

@@ -23,10 +23,9 @@ using namespace std;
 struct node {
     node *left;
     node *right;
-    int left_cnt;
-    int right_cnt;
+    int cnt;
     int val;
-    node(int _v) { val = _v; left_cnt = 0; right_cnt = 0; left = NULL; right = NULL; }
+    node(int _v) { val = _v; cnt = 0; left = NULL; right = NULL; }
 };
 
 struct person {
@@ -47,13 +46,12 @@ vector<person> people;
 node* dive(node *current_node, int count, int val) {
     if (current_node == NULL) return new node(val);
 
-    if (count > current_node->left_cnt) {
+    if (count > current_node->cnt) {
         // go right
-        current_node->right_cnt++;
-        current_node->right = dive(current_node->right, count - current_node->left_cnt - 1, val);
+        current_node->right = dive(current_node->right, count - current_node->cnt - 1, val);
     } else {
         // go left
-        current_node->left_cnt++;
+        current_node->cnt++;
         current_node->left = dive(current_node->left, count, val);
     }
 

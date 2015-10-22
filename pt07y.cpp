@@ -46,7 +46,10 @@ bool unite(int from, int to) {
 
 int main()
 {
-    cin.sync_with_stdio(false);
+    cin.sync_with_stdio(false);//Toggles on or off synchronization of all the iostream standard streams
+    //with their corresponding standard C streams
+    //if it is called before the program performs its first input or output operation.
+    //Thus cin will be as fast as scanf.
     int n,m;
     scanf("%d%d", &n, &m);
     
